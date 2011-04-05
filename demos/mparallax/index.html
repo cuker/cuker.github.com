@@ -73,17 +73,17 @@
 
         function handleTouchStart(e){
             e.preventDefault();
-            var e1 = evt.originalEvent.touches[0];
+            var e1 = e.originalEvent.touches[0];
             handleMouseDown(e1);
         }
 
         function handleTouchMove(e){
-            var e1 = evt.originalEvent.touches[0];
+            var e1 = e.originalEvent.touches[0];
             handleMouseMove(e1);
         }
         
         function handleTouchEnd(e){
-            var e1 = evt.originalEvent.touches[0];
+            var e1 = e.originalEvent.touches[0];
             handleMouseUp(e1);
         }
 
