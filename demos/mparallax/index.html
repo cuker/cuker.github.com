@@ -1,0 +1,120 @@
+<html>
+<head>
+    <style type="text/css"> 
+        body {
+            padding: 0px;
+            margin: 0px;
+            width: 100%;
+            height: 100%;
+        }
+        .layer {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+        }
+        #layer1 {
+            background: url('logo2.png') top left repeat;
+            opacity: 0.3;
+        }
+        #layer2 {
+           background: url('logo1.png') top left repeat;
+            opacity: 0.1;
+        }
+        #ctl {
+            position: absolute;
+        }
+    </style>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script> 
+    <script type="text/javascript">
+        var ctl = {w:null,h:null,x:0,y:0};
+        var win = {w:0,h:0};
+        var mdown=false;
+        var last={x:0,y:0};
+
+        function center_ctl(){
+            $("#ctl").css({top:winh-ctlh,left:winw-ctlw});
+        }
+
+        function handleMouseMove(e){
+            var dx = e.clientX - last.x;
+            var dy = e.clientY - last.y;
+            if(mdown){
+                ctl.x += dx;
+                ctl.y += dy;
+                update_ctl();
+            }
+            last.x = e.clientX;
+            last.y = e.clientY; 
+        }
+
+        function update_ctl(){
+            $("#ctl").css({top:ctl.y,left:ctl.x});
+            $("#layer1").css("background-position",""+ctl.x*-0.4+" "+ctl.y*-0.4);
+            $("#layer2").css("background-position",""+ctl.x*-1.2+" "+ctl.y*-1.2);
+        }
+
+        function handleMouseDown(e){
+            last.x = e.clientX;
+            last.y = e.clientY; 
+            mdown=true;
+            e.preventDefault();
+        }
+        
+        function handleMouseUp(e){
+            mdown=false;
+        }
+
+        function handleResize(e){
+            win.h = $(window).height();
+            win.w = $(window).width(); 
+        }
+
+        function handleTouchStart(e){
+            e.preventDefault();
+            var e1 = evt.originalEvent.touches[0];
+            handleMouseDown(e1);
+        }
+
+        function handleTouchMove(e){
+            var e1 = evt.originalEvent.touches[0];
+            handleMouseMove(e1);
+        }
+        
+        function handleTouchEnd(e){
+            var e1 = evt.originalEvent.touches[0];
+            handleMouseUp(e1);
+        }
+
+        $(document).ready(function(){
+
+            handleResize(null);
+
+            $("#ctl").load(function(){
+                ctl.w = $("#ctl").width();
+                ctl.h = $("#ctl").height();
+                ctl.x = win.w/2 - ctl.w/2;
+                ctl.y = win.h/2 - ctl.h/2; 
+                update_ctl();
+            });
+
+            $("body").mousemove(handleMouseMove);
+            $("#ctl").mousedown(handleMouseDown);
+            $("body").mouseup(handleMouseUp);
+            // touch events
+            $("#ctl").bind('touchstart',handleTouchStart);
+            $("body").bind('touchmove',handleTouchMove);
+            $("body").bind('touchend',handleTouchEnd); // Touch End on the body so we can always pull up (does this aply for Touch Cancel?)
+            // window resize
+            $(window).resize(handleResize);
+
+        });
+    </script> 
+</head>
+<body>
+    <div class="layer" id="layer1"></div>
+    <div class="layer" id="layer2"></div>
+    <img id="ctl" src="logo.png" />
+</body>
+</html>
