@@ -1,0 +1,61 @@
+<html>
+<head>
+    <style type="text/css">
+        body {
+            background-color: #000;
+        }
+        #container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+        .tile {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100px;
+            height: 100px;
+            background-color: #f00;
+            opacity: 0.5;
+        }
+    </style>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script> 
+    <script type="text/javascript">
+        var theta=0;
+        var tiles=[];
+        var perspective=900;
+        var images=[null,null,null,null,null,null,null,null,null,null];
+        function tick(){
+            //console.log("theta is "+theta);
+            //$("#container").css("-webkit-transform","perspective(900) rotate3d(0,1,0,"+theta+"deg)");
+            for(var i=0;i<tiles.length;i++){
+                update_tile(tiles[i]);
+            }
+            theta = (theta+1)%360;
+        }
+
+
+        function update_tile(t){
+            $("#"+t.id).css("-webkit-transform","perspective("+perspective+") rotate3d(0,1,0,"+theta+"deg) translate3d("+t.x+"px,"+t.y+"px,"+t.z+"px) rotate3d(0,1,0,"+t.r+"deg)");
+        }
+
+        $(document).ready(function(){
+            for(var i=0;i<images.length;i++){
+                $("body").append('<div id="tile_'+i+'" class="tile"></div>');
+                var x=500-Math.random()*1000;
+                var y=250-Math.random()*500;
+                var z=500-Math.random()*1000;
+                var r=450-Math.random()*900;
+                var t ={x:x,y:y,z:z,r:r,id:"tile_"+i};
+                //$("#"+t.id).css("background","url('"+images[i]+"') center no-repeat;")l
+                tiles.push(t);
+                update_tile(t);
+            }
+            setInterval(tick,50);
+        });
+    </script>
+</head>
+<body>
+    <div id="container"></div>    
+</body>
+</html>
