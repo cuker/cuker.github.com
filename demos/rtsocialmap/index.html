@@ -1,0 +1,99 @@
+<html>
+<head>
+    <style type="text/css">
+        body {
+            font-family: Arial;
+            margin: 0px;
+            padding: 0px;
+            background-color: #eee;
+        }
+        #container {
+            margin: 8px auto;
+            width: 600px;
+            padding: 8px;
+        }
+        #map_target {
+            width: 600px;
+            height: 300px;
+        }
+        #feed {
+            width: 100%;
+            height: 400px;
+        }
+        .update {
+            padding: 4px;
+            border-bottom: 1px solid #000;
+        }
+    </style>
+    <!-- Libraries -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script> 
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true"></script>
+    <!-- Code -->
+    <script type="text/javascript">
+
+    function add_update(source,lat,lng,message,user){
+        updates.push({source:source,lat:lat,lng:lng,message:message,user:user}); 
+        $("#feed").prepend('<div class=".update">'+source+'/'+user+': '+message+'</div>');
+    }
+
+    function query_local_comments(){
+        // TBD check local comments for new comments
+    }
+
+    function query_twitter(){
+        // TBD check twitter for new tweets with hashtag
+    }
+
+    function query_facebook(){
+        var query = FB.Data.query("SELECT post_id, actor_id, target_id, message FROM stream WHERE source_id = '229278082956'");
+        query.wait(function(rows) {
+            console.log(rows);
+            //for(var i=0;i<rows;i++){
+            
+            //}
+        });
+    }
+
+    function update_feed(){
+        // Get latest feed message
+        // Can we do this in JS? otherwise, hit Ajax to php script that caches a frequent result..
+        query_facebook(); 
+        query_twitter();
+        query_local_comments();
+
+        // push updates into queue
+        // roll out updates  from queue
+    }
+
+
+    var map=null;
+    function init_map(target){
+        var latlng = new google.maps.LatLng(40,-100);
+        var opt = { zoom: 3, center: latlng, mapTypeId: google.maps.MapTypeId.ROADMAP }; 
+        map = new google.maps.Map(document.getElementById(target),opt); 
+    }
+
+    $(document).ready(function(){
+        init_map("map_target");
+        setInterval(update_feed,5000);
+    });
+
+    </script>
+</head>
+<body>
+    <div id="container">
+        <div id="map_target"></div>
+        <h2>Feed</h2>
+        <div id="feed">
+            
+        </div>
+    </div>
+    <div id="fb-root"></div>
+    <script src="http://connect.facebook.net/en_US/all.js"></script>
+    <script>
+        FB.init({
+            appId: '235419226502900'
+        });
+    </script>
+</body>
+</html>
