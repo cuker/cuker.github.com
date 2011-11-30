@@ -1,0 +1,58 @@
+<html>
+<head>
+    <style type="text/css">
+        #z {
+            background-color: #eee;
+            width: 400px;
+            height: 400px;
+            margin: 15px auto;
+        }
+
+    </style>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+    <script type="text/javascript">
+    function handleDrop(e){
+        console.log(e.dataTransfer);
+        for(var i=0;i<e.dataTransfer.files.length;i++){
+            var file = e.dataTransfer.files[i];
+            console.log(file.name+": "+file.type+" "+file.size+" "+file.lastModifiedDate.toLocaleString());
+            readFile(file);
+        }
+    }
+    function dragEnter(e){
+        e.stopPropagation();
+        e.preventDefault();
+    }
+    function dragOver(e){
+        e.stopPropagation();
+        e.preventDefault();
+    }
+    function readFile(f){
+        var reader = new FileReader();
+        reader.onload = function(e){
+            console.log(e);
+        };
+        reader.onerror = function(e){
+            console.log("error:" );
+            console.log(e);
+        }
+        reader.readAsText(f);
+    }
+
+    $(document).ready(function(){
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            var z_el = document.getElementById("z");
+            z_el.addEventListener("drop",handleDrop);
+            z_el.addEventListener("dragenter",dragEnter)
+            z_el.addEventListener("dragover",dragOver); 
+        }else{
+            alert('The File APIs are not fully supported in this browser.');
+        }
+    }); 
+    </script>
+</head>
+<body>
+    <div id="z">
+    </div>
+</body>
+</html>
