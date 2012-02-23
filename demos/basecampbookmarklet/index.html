@@ -1,0 +1,50 @@
+<html>
+<head>
+    <style type="text/css">
+        body{ font-family: Arial,sans-serif; }
+        a { color: #333; }
+    </style>
+    <script type="text/javascript">
+        var template = "javascript:var d=new Date(); var strd = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); var tgtDate=strd; var url = 'https://<BC_URL>/time_entries/report?subject_id=<SUBJECT_ID>&from='+tgtDate+'&to='+tgtDate+'&commit=Create+report';document.location=url;";
+
+
+        function generate(){
+            var bc_url = document.getElementById("bc_url").value;
+            var bc_my_info = document.getElementById("bc_my_info").value;
+            var days = Number(document.getElementById("days").value);
+            
+            var person_id = /(\d+)\/edit/.exec(bc_my_info)[1];
+        
+            var l = document.getElementById("thelink"); 
+            l.attributes.href.value = template.replace("<BC_URL>",bc_url).replace("<SUBJECT_ID>",person_id).replace("<DAYS>",days);
+            l.innerHTML = days == 0 ? "Today's Time" : "Yesterday's Time";
+        }
+        
+        window.onload=function(){
+            document.getElementById("generate").onclick = generate;
+        };
+    </script>
+</head>
+<body>
+    <h1>Basecamp Time Tracking Bookmarklet Generator</h1>
+    <p>Use this to generate a bookmark that will show you all the time you tracked today and yesterday on your basecamp account.</p>
+
+    <dl>
+        <dt><label>Basecamp URL</label></dt>
+            <dd><input type="text" id="bc_url" value="cuker.basecamphq.com" /></dd>
+        <dt><label>Basecamp My Info Link (copy "My Info" link from upper right of Basecamp Logged In Page)</label></dt>
+            <dd><input type="text" id="bc_my_info" value="" /></dd>
+        <dt><label>Days</label></dt>
+            <dd>
+                <input type="radio" id="days" value="0" checked /> Today's Time<br/>
+                <input type="radio" id="days" value="1" /> Yesterday's Time<br/>
+             </dd>
+    </dl>
+    <button id="generate">Generate</button>
+
+    <p>Drag this link after you generate into your bookmarks bar:</p>
+    <div>
+        <a id="thelink" href="#">Click Generate First!</a>
+    </div>
+</body>
+</html>
