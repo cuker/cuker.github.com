@@ -5,15 +5,17 @@
         a { color: #333; }
     </style>
     <script type="text/javascript">
-        var template = "javascript:var d=new Date(); var strd = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); var tgtDate=strd; var url = 'https://<BC_URL>/time_entries/report?subject_id=<SUBJECT_ID>&from='+tgtDate+'&to='+tgtDate+'&commit=Create+report';document.location=url;";
+        var template = "javascript:(function(){var d=new Date(); d.setDate(d.getDate() - <DAYS>); if(d.getDay()==1){ d.setDate(d.getDate()-3); }  var strd = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); open('https://<BC_URL>/time_entries/report?subject_id=<SUBJECT_ID>&from='+strd+'&to='+strd+'&commit=Create+report');})();";
 
 
         function generate(){
             var bc_url = document.getElementById("bc_url").value;
             var bc_my_info = document.getElementById("bc_my_info").value;
             var days = Number(document.getElementById("days").value);
-            
+           
             var person_id = /(\d+)\/edit/.exec(bc_my_info)[1];
+
+            console.log("days "+days+" person_id "+person_id+" url "+bc_url); 
         
             var l = document.getElementById("thelink"); 
             l.attributes.href.value = template.replace("<BC_URL>",bc_url).replace("<SUBJECT_ID>",person_id).replace("<DAYS>",days);
@@ -23,6 +25,7 @@
         window.onload=function(){
             document.getElementById("generate").onclick = generate;
         };
+
     </script>
 </head>
 <body>
@@ -31,13 +34,15 @@
 
     <dl>
         <dt><label>Basecamp URL</label></dt>
-            <dd><input type="text" id="bc_url" value="cuker.basecamphq.com" /></dd>
-        <dt><label>Basecamp My Info Link (copy "My Info" link from upper right of Basecamp Logged In Page)</label></dt>
-            <dd><input type="text" id="bc_my_info" value="" /></dd>
+            <dd><input cols="100" type="text" id="bc_url" value="cuker.basecamphq.com" /></dd>
+        <dt><label>Basecamp My Info Link (copy "My Info" link from upper right of Basecamp Logged In Page)</label><img src="get_person_id.png" /><br/></dt>
+            <dd><input type="text" cols="100" id="bc_my_info" value="" /></dd>
         <dt><label>Days</label></dt>
             <dd>
-                <input type="radio" id="days" value="0" checked /> Today's Time<br/>
-                <input type="radio" id="days" value="1" /> Yesterday's Time<br/>
+                <select id="days">
+                    <option value="0">Today's Time</option>
+                    <option value="1" />Yesterday's Time</option>
+                </select>
              </dd>
     </dl>
     <button id="generate">Generate</button>
