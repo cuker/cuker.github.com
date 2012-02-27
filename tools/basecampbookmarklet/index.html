@@ -5,7 +5,7 @@
         a { color: #333; }
     </style>
     <script type="text/javascript">
-        var template = "javascript:(function(){var d=new Date(); d.setDate(d.getDate() - <DAYS>); if(d.getDay()==1){ d.setDate(d.getDate()-3); }  var strd = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); open('https://<BC_URL>/time_entries/report?subject_id=<SUBJECT_ID>&from='+strd+'&to='+strd+'&commit=Create+report');})();";
+        var template = "javascript:(function(){var d=new Date(); d.setDate(d.getDate() - <DAYS>); if(d.getDay()==0){ d.setDate(d.getDate()-2); }  var strd = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); open('https://<BC_URL>/time_entries/report?subject_id=<SUBJECT_ID>&from='+strd+'&to='+strd+'&commit=Create+report');})();";
 
 
         function generate(){
